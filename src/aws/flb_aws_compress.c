@@ -103,9 +103,6 @@ int flb_aws_compression_compress(int compression_type, void *in_data, size_t in_
         }
         ++o;
     }
-
-    flb_error("[aws_compress] invalid compression type: %i", compression_type);
-    flb_errno();
     return -1;
 }
 
@@ -188,10 +185,7 @@ int flb_aws_compression_b64_truncate_compress(int compression_type, size_t max_o
             truncated_in_len = (max_out_len * truncated_in_len) / b64_compressed_len;
             truncated_in_len = (truncated_in_len * truncation_reduction_percent) / 100;
 
-            /* Ensure working down */
-            if (truncated_in_len >= truncated_in_len_prev) {
-                truncated_in_len = truncated_in_len_prev - 1;
-            }
+     
 
             /* Allocate truncation buffer */
             if (!is_truncated) {
@@ -236,22 +230,12 @@ int flb_aws_compression_b64_truncate_compress(int compression_type, size_t max_o
                                compressed_buf, compressed_len);
     flb_free(compressed_buf);
 
-    if (ret == FLB_BASE64_ERR_BUFFER_TOO_SMALL) {
-        flb_error("[aws_compress] compressed log base64 buffer too small");
-        flb_free(b64_compressed_buf);
-        return -1; /* not handle truncation at this point */
-    }
+  
     if (ret != 0) {
         flb_free(b64_compressed_buf);
         return -1;
     }
 
-    /* Double check b64 buf len */
-    if (b64_compressed_len - 1 != b64_actual_len) {
-        flb_error("[aws_compress] buffer len should be 1 greater than actual len");
-        flb_free(b64_compressed_buf);
-        return -1;
-    }
 
     *out_data = b64_compressed_buf;
     *out_len = b64_compressed_len - 1; /* disregard added null character */
