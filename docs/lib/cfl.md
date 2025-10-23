@@ -15,6 +15,8 @@ CFL provides implementations for:
 
 The library is designed to be minimal and focused, providing only what's needed for efficient data handling in performance-critical applications.
 
+Note: The name doesn't mean anything specific, you can call it `c:\ floppy` if you want.
+
 ## Key Methods/Functions
 
 ### Core Library
@@ -93,6 +95,7 @@ The library is designed to be minimal and focused, providing only what's needed 
 4. **String Safety**: The SDS (Simple Dynamic String) implementation is designed to be safe and efficient for string operations.
 5. **List Efficiency**: The linked list implementation is highly optimized for common operations like insertion and deletion.
 6. **Hash Quality**: The hash functions use high-quality algorithms (XXH3) for good distribution properties.
+7. **Thread Safety**: CFL is designed to be thread-safe for most operations, making it suitable for concurrent applications.
 
 ## Examples
 

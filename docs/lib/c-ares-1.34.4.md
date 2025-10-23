@@ -13,6 +13,12 @@ Key features of c-ares include:
 - Security-focused implementation with safe parsers
 - Extensive RFC compliance
 - MIT licensed for both free and commercial use
+- Support for a wide range of DNS record types including A, AAAA, MX, SRV, TXT, and more
+- Support for DNS-over-TCP and DNS-over-UDP
+- Support for DNS cookies for off-path DNS poisoning and amplification mitigation
+- Support for DNS 0x20 query name case randomization to prevent cache poisoning attacks
+- Support for IPv6 address sorting as used by `ares_getaddrinfo()`
+- Support for TCP FastOpen (TFO) for 0-RTT TCP Connection Resumption
 
 ## Key Methods/Functions
 
@@ -70,6 +76,8 @@ Key features of c-ares include:
 3. **Event Processing**: Use `ares_process()` or related functions to process events and trigger callbacks.
 4. **Memory Management**: The library manages its own memory, but applications should ensure proper cleanup of channels and options.
 5. **Thread Safety**: c-ares is not thread-safe by default. Multiple threads should use separate channels or implement their own synchronization.
+6. **RFC Compliance**: c-ares has extensive RFC compliance, supporting RFC1035, RFC2671/RFC6891, RFC3596, RFC2782, RFC3403, RFC6698, RFC9460, RFC7553, RFC6844, RFC2535/RFC2931, RFC7873/RFC9018, draft-vixie-dnsext-dns0x20-00, RFC7686, RFC2606/RFC6761, RFC2308/RFC9520, RFC6724, RFC7413, and RFC3986.
+7. **Security Features**: c-ares includes security-focused implementation with safe parsers and is constantly validated with a range of static and dynamic analyzers, as well as being constantly fuzzed by OSS Fuzz.
 
 ## Examples
 
