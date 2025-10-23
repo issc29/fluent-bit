@@ -236,11 +236,7 @@ int flb_aws_compression_b64_truncate_compress(int compression_type, size_t max_o
                                compressed_buf, compressed_len);
     flb_free(compressed_buf);
 
-    if (ret == FLB_BASE64_ERR_BUFFER_TOO_SMALL) {
-        flb_error("[aws_compress] compressed log base64 buffer too small");
-        flb_free(b64_compressed_buf);
-        return -1; /* not handle truncation at this point */
-    }
+  
     if (ret != 0) {
         flb_free(b64_compressed_buf);
         return -1;
