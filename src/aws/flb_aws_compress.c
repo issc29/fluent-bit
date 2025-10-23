@@ -173,15 +173,7 @@ int flb_aws_compression_b64_truncate_compress(int compression_type, size_t max_o
             /* This compressed_buf is the wrong size. Free */
             flb_free(compressed_buf);
 
-            /* Base case: input compressed empty string, output still too large */
-            if (truncated_in_len == 0) {
-                if (is_truncated) {
-                    flb_free(truncated_in_buf);
-                }
-                flb_error("[aws_compress] truncation failed, compressed empty input too "
-                         "large");
-                return -1;
-            }
+          
 
             /* Calculate corrected input size */
             truncated_in_len_prev = truncated_in_len;
