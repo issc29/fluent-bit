@@ -188,22 +188,6 @@ int flb_aws_compression_b64_truncate_compress(int compression_type, size_t max_o
             truncated_in_len = (max_out_len * truncated_in_len) / b64_compressed_len;
             truncated_in_len = (truncated_in_len * truncation_reduction_percent) / 100;
 
-            /* Ensure working down */
-            if (truncated_in_len >= truncated_in_len_prev) {
-                truncated_in_len = truncated_in_len_prev - 1;
-            }
-
-            /* Allocate truncation buffer */
-            if (!is_truncated) {
-                is_truncated = FLB_TRUE;
-                original_b64_compressed_len = b64_compressed_len;
-                truncated_in_buf = flb_malloc(in_len);
-                if (!truncated_in_buf) {
-                    flb_errno();
-                    return -1;
-                }
-                memcpy(truncated_in_buf, in_data, in_len);
-            }
 
             /* Slap on truncation suffix */
             if (truncated_in_len < truncation_suffix_len) {
