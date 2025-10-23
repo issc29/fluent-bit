@@ -94,7 +94,11 @@ Note: The name doesn't mean anything specific, you can call it `c:\ floppy` if y
 3. **Memory Management**: CFL handles its own memory management, but users should properly destroy objects when no longer needed.
 4. **String Safety**: The SDS (Simple Dynamic String) implementation is designed to be safe and efficient for string operations.
 5. **List Efficiency**: The linked list implementation is highly optimized for common operations like insertion and deletion.
-6. **Hash Quality**: The hash functions use high-quality algorithms (XXH3) for good distribution properties.
+6. **Hash Quality**: The hash functions use high-quality algorithms (XXH3) for good distribution properties. CFL uses the xxHash library which provides:
+   - XXH32: generates 32-bit hashes, using 32-bit arithmetic
+   - XXH64: generates 64-bit hashes, using 64-bit arithmetic
+   - XXH3: generates 64 or 128-bit hashes, using vectorized arithmetic
+   All variants successfully complete the SMHasher test suite which evaluates the quality of hash functions.
 7. **Thread Safety**: CFL is designed to be thread-safe for most operations, making it suitable for concurrent applications.
 
 ## Examples

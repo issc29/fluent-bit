@@ -56,11 +56,14 @@ Avro is particularly useful for:
 2. **Reference Counting**: Many Avro objects use reference counting. Always decrement references with decref functions to prevent memory leaks.
 3. **Binary Format**: Avro uses a compact binary format that is efficient for both storage and transmission.
 4. **Schema First**: Avro requires a schema to be defined before serializing data, which helps ensure data consistency.
-5. **Value API**: Starting with version 1.6.0, Avro C library has a new API for handling Avro data using the value interface, which is more efficient than the legacy datum API.
+5. **Value API**: Starting with version 1.6.0, Avro C library has a new API for handling Avro data using the value interface, which is more efficient than the legacy datum API. The value API provides:
+   - Better performance for complex data structures
+   - Support for custom value implementations
+   - Generic value implementation that works for any Avro schema
+   - Wrapper implementation for deprecated avro_datum_t type
 6. **Memory Management**: Avro handles its own memory management, but users should properly destroy objects when no longer needed.
 7. **Schema Validation**: Data written to an Avro File Object Container is always validated.
-
-## Examples
+8. **Dependency**: Avro depends on the Jansson JSON parser (version 2.3 or higher) for schema parsing.
 
 ### Basic Serialization Example
 ```c

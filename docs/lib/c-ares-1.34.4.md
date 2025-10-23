@@ -76,7 +76,25 @@ Key features of c-ares include:
 3. **Event Processing**: Use `ares_process()` or related functions to process events and trigger callbacks.
 4. **Memory Management**: The library manages its own memory, but applications should ensure proper cleanup of channels and options.
 5. **Thread Safety**: c-ares is not thread-safe by default. Multiple threads should use separate channels or implement their own synchronization.
-6. **RFC Compliance**: c-ares has extensive RFC compliance, supporting RFC1035, RFC2671/RFC6891, RFC3596, RFC2782, RFC3403, RFC6698, RFC9460, RFC7553, RFC6844, RFC2535/RFC2931, RFC7873/RFC9018, draft-vixie-dnsext-dns0x20-00, RFC7686, RFC2606/RFC6761, RFC2308/RFC9520, RFC6724, RFC7413, and RFC3986.
+6. **RFC Compliance**: c-ares has extensive RFC compliance, supporting:
+   - RFC1035: Initial/Base DNS RFC
+   - RFC2671/RFC6891: EDNS0 option (meta-RR)
+   - RFC3596: IPv6 Address. `AAAA` Record.
+   - RFC2782: Server Selection. `SRV` Record.
+   - RFC3403: Naming Authority Pointer. `NAPTR` Record.
+   - RFC6698: DNS-Based Authentication of Named Entities (DANE) Transport Layer Security (TLS) Protocol. `TLSA` Record.
+   - RFC9460: General Purpose Service Binding, Service Binding type for use with HTTPS. `SVCB` and `HTTPS` Records.
+   - RFC7553: Uniform Resource Identifier. `URI` Record.
+   - RFC6844: Certification Authority Authorization. `CAA` Record.
+   - RFC2535/RFC2931: `SIG0` Record. Only basic parser, not full implementation.
+   - RFC7873/RFC9018: DNS Cookie off-path dns poisoning and amplification mitigation.
+   - draft-vixie-dnsext-dns0x20-00: DNS 0x20 query name case randomization to prevent cache poisoning attacks.
+   - RFC7686: Reject queries for `.onion` domain names with `NXDOMAIN`.
+   - RFC2606/RFC6761: Special case treatment for `localhost`/`.localhost`.
+   - RFC2308/RFC9520: Negative Caching of DNS Resolution Failures.
+   - RFC6724: IPv6 address sorting as used by `ares_getaddrinfo()`.
+   - RFC7413: TCP FastOpen (TFO) for 0-RTT TCP Connection Resumption.
+   - RFC3986: Uniform Resource Identifier (URI). Used for server configuration.
 7. **Security Features**: c-ares includes security-focused implementation with safe parsers and is constantly validated with a range of static and dynamic analyzers, as well as being constantly fuzzed by OSS Fuzz.
 
 ## Examples
