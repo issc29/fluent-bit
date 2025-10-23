@@ -188,10 +188,7 @@ int flb_aws_compression_b64_truncate_compress(int compression_type, size_t max_o
             truncated_in_len = (max_out_len * truncated_in_len) / b64_compressed_len;
             truncated_in_len = (truncated_in_len * truncation_reduction_percent) / 100;
 
-            /* Ensure working down */
-            if (truncated_in_len >= truncated_in_len_prev) {
-                truncated_in_len = truncated_in_len_prev - 1;
-            }
+     
 
             /* Allocate truncation buffer */
             if (!is_truncated) {
