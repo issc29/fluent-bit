@@ -246,12 +246,6 @@ int flb_aws_compression_b64_truncate_compress(int compression_type, size_t max_o
         return -1;
     }
 
-    /* Double check b64 buf len */
-    if (b64_compressed_len - 1 != b64_actual_len) {
-        flb_error("[aws_compress] buffer len should be 1 greater than actual len");
-        flb_free(b64_compressed_buf);
-        return -1;
-    }
 
     *out_data = b64_compressed_buf;
     *out_len = b64_compressed_len - 1; /* disregard added null character */
