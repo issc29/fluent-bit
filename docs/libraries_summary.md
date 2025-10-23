@@ -2,206 +2,149 @@
 
 This document provides a quick reference guide for developers working with the key libraries used in this project.
 
-## lib/avro
+## lib/jansson-e23f558
 
 ### Overview
 
-Apache Avro is a data serialization system that provides rich data structures and a compact, fast, binary data format. It is designed for efficient serialization of data and includes support for schema evolution.
+Jansson is a C library for encoding, decoding and manipulating JSON data. Its main features and design principles are:
+
+- Simple and intuitive API and data model
+- Comprehensive documentation
+- No dependencies on other libraries
+- Full Unicode support (UTF-8)
+- Extensive test suite
+
+Jansson is licensed under the MIT license.
 
 ### Key Methods/Functions
 
-**Schema Management**
-- `avro_schema_from_json_literal()` - Parse a schema from a JSON string literal
-- `avro_schema_decref()` - Decrement the reference count of a schema
-- `avro_schema_record()` - Create a record schema
-- `avro_schema_record_field_append()` - Append a field to a record schema
-- `avro_schema_string()` - Create a string schema
+**Construction and Reference Counting**
+- `json_object()` - Create a new JSON object
+- `json_array()` - Create a new JSON array
+- `json_string()` - Create a new JSON string
+- `json_integer()` - Create a new JSON integer
+- `json_real()` - Create a new JSON real number
+- `json_true()` - Create a new JSON true value
+- `json_false()` - Create a new JSON false value
+- `json_null()` - Create a new JSON null value
+- `json_incref()` - Increment reference count of a JSON value
+- `json_decref()` - Decrement reference count of a JSON value
 
-**Value Operations**
-- `avro_generic_class_from_schema()` - Create a value class from a schema
-- `avro_generic_value_new()` - Create a new generic value
-- `avro_value_get_by_name()` - Get a field value by name
-- `avro_value_set_long()` - Set a long value
-- `avro_value_set_string()` - Set a string value
-- `avro_value_set_int()` - Set an integer value
-- `avro_value_get_long()` - Get a long value
-- `avro_value_get_string()` - Get a string value
-- `avro_value_get_int()` - Get an integer value
-- `avro_value_decref()` - Decrement the reference count of a value
-- `avro_value_iface_decref()` - Decrement the reference count of a value interface
+**Object Operations**
+- `json_object_size()` - Get the number of items in a JSON object
+- `json_object_get()` - Get a value from a JSON object by key
+- `json_object_set_new()` - Set a value in a JSON object with new value
+- `json_object_del()` - Delete a value from a JSON object by key
+- `json_object_clear()` - Clear all items from a JSON object
+- `json_object_update()` - Update a JSON object with items from another object
 
-**File Operations**
-- `avro_file_writer_create_with_codec()` - Create a new file writer with compression
-- `avro_file_writer_append_value()` - Append a value to the file
-- `avro_file_writer_flush()` - Flush the file writer
-- `avro_file_writer_close()` - Close the file writer
-- `avro_file_reader()` - Open a file for reading
-- `avro_file_reader_read_value()` - Read a value from the file
-- `avro_file_reader_close()` - Close the file reader
+**Array Operations**
+- `json_array_size()` - Get the number of items in a JSON array
+- `json_array_get()` - Get a value from a JSON array by index
+- `json_array_append_new()` - Append a new value to a JSON array
+- `json_array_remove()` - Remove a value from a JSON array at a specific index
+- `json_array_clear()` - Clear all items from a JSON array
 
-**Error Handling**
-- `avro_strerror()` - Get the error message for the last operation
+**Loading and Dumping**
+- `json_loads()` - Load JSON from a string
+- `json_load_file()` - Load JSON from a file path
+- `json_dumps()` - Dump JSON to a string
+- `json_dump_file()` - Dump JSON to a file path
 
 ### Important Usage Notes
 
-1. **Schema Evolution**: Avro supports schema evolution, allowing you to add/remove fields while maintaining backward compatibility.
-2. **Reference Counting**: Many Avro objects use reference counting. Always decrement references with decref functions to prevent memory leaks.
-3. **Binary Format**: Avro uses a compact binary format that is efficient for both storage and transmission.
-4. **Schema First**: Avro requires a schema to be defined before serializing data, which helps ensure data consistency.
-5. **Value API**: Starting with version 1.6.0, Avro C library has a new API for handling Avro data using the value interface.
-6. **Memory Management**: Avro handles its own memory management, but users should properly destroy objects when no longer needed.
-7. **Schema Validation**: Data written to an Avro File Object Container is always validated.
-8. **Dependency**: Avro depends on the Jansson JSON parser (version 2.3 or higher) for schema parsing.
+1. **Reference Counting**: Jansson uses reference counting for memory management. Always call `json_decref()` when you're done with a JSON value to prevent memory leaks.
 
-## lib/c-ares-1.34.4
+2. **Thread Safety**: Jansson is thread-safe for all read-only functions plus reference counting operations.
+
+3. **UTF-8 Support**: Jansson has full Unicode support with UTF-8 encoding. All strings are assumed to be valid UTF-8.
+
+4. **API Simplicity**: Jansson provides a simple and intuitive API for working with JSON data.
+
+5. **No Dependencies**: Jansson has no external dependencies, making it easy to integrate into projects.
+
+## lib/jemalloc-5.3.0
 
 ### Overview
 
-c-ares is a modern DNS (stub) resolver library written in C. It provides interfaces for asynchronous DNS queries while abstracting the intricacies of the underlying DNS protocol.
+jemalloc is a general purpose malloc(3) implementation that emphasizes fragmentation avoidance and scalable concurrency support. jemalloc first came into use as the FreeBSD libc allocator in 2005, and since then it has found its way into numerous applications that rely on its predictable behavior.
 
 ### Key Methods/Functions
 
-**Library Initialization**
-- `ares_library_init()` - Initialize the c-ares library
-- `ares_library_cleanup()` - Clean up the c-ares library resources
-- `ares_library_initialized()` - Check if the library is initialized
-- `ares_version()` - Get the c-ares version information
+**Standard Memory Allocation**
+- `malloc(size_t size)` - Allocate memory block
+- `calloc(size_t num, size_t size)` - Allocate and zero-initialize memory block
+- `realloc(void *ptr, size_t size)` - Reallocate memory block
+- `free(void *ptr)` - Deallocate memory block
 
-**Channel Management**
-- `ares_init()` - Initialize a channel with default options
-- `ares_init_options()` - Initialize a channel with custom options
-- `ares_save_options()` - Save the current channel options
-- `ares_destroy_options()` - Destroy channel options
-- `ares_destroy()` - Destroy a channel
-- `ares_reinit()` - Reinitialize a channel
-- `ares_dup()` - Duplicate a channel
+**Extended Allocation**
+- `mallocx(size_t size, int flags)` - Extended memory allocation
+- `rallocx(void *ptr, size_t size, int flags)` - Extended memory reallocation
+- `xallocx(void *ptr, size_t size, size_t extra, int flags)` - Extend memory allocation
+- `sallocx(const void *ptr, int flags)` - Get allocation size
+- `dallocx(void *ptr, int flags)` - Extended memory deallocation
 
-**DNS Queries**
-- `ares_query()` - Perform a DNS query
-- `ares_search()` - Perform a DNS search query
-- `ares_gethostbyname()` - Resolve a hostname to an IP address
-- `ares_gethostbyaddr()` - Resolve an IP address to a hostname
-- `ares_getnameinfo()` - Convert a socket address to a hostname and service name
-- `ares_getaddrinfo()` - Resolve a hostname to address information
-- `ares_send()` - Send a raw DNS query
+**Control Interface**
+- `mallctl(const char *name, void *oldp, size_t *oldlenp, void *newp, size_t newlen)` - Control interface
+- `malloc_stats_print(void (*write_cb)(void *, const char *), void *cbopaque, const char *opts)` - Print statistics
 
-**Socket Operations**
-- `ares_fds()` - Get the file descriptors for the channel
-- `ares_getsock()` - Get socket information for the channel
-- `ares_timeout()` - Get the timeout for the next operation
-- `ares_process()` - Process events on the channel
-- `ares_process_fd()` - Process events on specific file descriptors
-- `ares_process_fds()` - Process events on multiple file descriptors
-
-**Configuration**
-- `ares_set_local_ip4()` - Set the local IPv4 address for queries
-- `ares_set_local_ip6()` - Set the local IPv6 address for queries
-- `ares_set_local_dev()` - Set the local network device for queries
-- `ares_set_socket_callback()` - Set a callback for socket creation
-- `ares_set_socket_configure_callback()` - Set a callback for socket configuration
-- `ares_set_sortlist()` - Set the sort list for addresses
-- `ares_set_server_state_callback()` - Set a callback for server state changes
-
-**Utility Functions**
-- `ares_expand_name()` - Expand a compressed DNS name
-- `ares_expand_string()` - Expand a compressed string
-- `ares_create_query()` - Create a DNS query
-- `ares_mkquery()` - Create a DNS query (legacy)
+**Arena Management**
+- `arenas.create(unsigned *arena_ind)` - Create new arena
+- `arenas.destroy(unsigned arena_ind)` - Destroy arena
 
 ### Important Usage Notes
 
-1. **Asynchronous Nature**: c-ares is designed for asynchronous operations. Queries don't block and results are delivered via callbacks.
-2. **Channel Management**: Always initialize the library with `ares_library_init()` before creating channels, and clean up with `ares_library_cleanup()` when done.
-3. **Event Processing**: Use `ares_process()` or related functions to process events and trigger callbacks.
-4. **Memory Management**: The library manages its own memory, but applications should ensure proper cleanup of channels and options.
-5. **Thread Safety**: c-ares is not thread-safe by default. Multiple threads should use separate channels or implement their own synchronization.
-6. **RFC Compliance**: c-ares has extensive RFC compliance supporting DNS standards.
-7. **Security Features**: c-ares includes security-focused implementation with safe parsers.
-8. **Cross-platform Compatibility**: c-ares runs on Linux, FreeBSD, OpenBSD, MacOS, Solaris, AIX, Windows, Android, iOS and many more operating systems.
-9. **License**: c-ares is MIT licensed, suitable for both free and commercial software.
+1. **Drop-in Replacement**: jemalloc is designed to be a drop-in replacement for the standard C library's malloc implementation.
 
-## lib/cfl
+2. **Thread Safety**: jemalloc is fully thread-safe and designed for concurrent access from multiple threads.
+
+3. **Scalability**: jemalloc uses multiple arenas to reduce lock contention and improve scalability on multi-core systems.
+
+4. **Memory Efficiency**: jemalloc focuses on minimizing memory fragmentation through its sophisticated allocation strategies.
+
+5. **Tuning Options**: jemalloc provides extensive runtime tuning options through the mallctl interface and environment variables.
+
+6. **Profiling Support**: jemalloc includes built-in heap profiling capabilities for memory usage analysis.
+
+7. **Background Threads**: jemalloc can use background threads for memory purging operations to improve application responsiveness.
+
+## lib/jsmn
 
 ### Overview
 
-CFL is a tiny library that provides interfaces for data structures, originally created to satisfy the needs of Fluent Bit and other libraries used internally like CMetrics and CTraces projects. It offers a collection of lightweight, efficient data structures and utilities commonly needed in C applications.
+jsmn (pronounced like 'jasmine') is a minimalistic JSON parser in C. It can be easily integrated into resource-limited or embedded projects. jsmn is designed to be robust (it should work fine even with erroneous data), fast (it should parse data on the fly), portable (no superfluous dependencies or non-standard C extensions), and simple (simple code style, simple algorithm, simple integration into other projects).
 
 ### Key Methods/Functions
 
-**Core Library**
-- `cfl_init()` - Initialize the CFL library
-- `cfl_version()` - Get the CFL version string
+**Core API**
+- `jsmn_init(jsmn_parser *parser)` - Initialize a JSON parser
+- `jsmn_parse(jsmn_parser *parser, const char *js, const size_t len, jsmntok_t *tokens, const unsigned int num_tokens)` - Parse JSON data into tokens
 
-**String Operations (cfl_sds)**
-- `cfl_sds_create()` - Create a new SDS string
-- `cfl_sds_create_len()` - Create a new SDS string with specified length
-- `cfl_sds_create_size()` - Create a new SDS string with specified size
-- `cfl_sds_destroy()` - Destroy an SDS string
-- `cfl_sds_cat()` - Concatenate a string to an SDS
-- `cfl_sds_cat_safe()` - Safely concatenate a string to an SDS
-- `cfl_sds_printf()` - Format and append to an SDS
-- `cfl_sds_len()` - Get the length of an SDS
-- `cfl_sds_alloc()` - Get the allocated size of an SDS
-- `cfl_sds_avail()` - Get the available space in an SDS
-- `cfl_sds_increase()` - Increase the size of an SDS
-- `cfl_sds_set_len()` - Set the length of an SDS
+**Token Types**
+- `JSMN_OBJECT` - Object token type
+- `JSMN_ARRAY` - Array token type
+- `JSMN_STRING` - String token type
+- `JSMN_PRIMITIVE` - Primitive token type (number, boolean, null)
 
-**Linked List Operations (cfl_list)**
-- `cfl_list_init()` - Initialize a list
-- `cfl_list_add()` - Add an item to the beginning of a list
-- `cfl_list_append()` - Add an item to the end of a list
-- `cfl_list_prepend()` - Add an item to the beginning of a list
-- `cfl_list_del()` - Remove an item from a list
-- `cfl_list_is_empty()` - Check if a list is empty
-- `cfl_list_size()` - Get the size of a list
-- `cfl_list_entry_init()` - Initialize a list entry
-- `cfl_list_entry_is_orphan()` - Check if a list entry is orphaned
-- `cfl_list_cat()` - Concatenate two lists
-
-**Key-Value Operations (cfl_kv)**
-- `cfl_kv_create()` - Create a new key-value pair
-- `cfl_kv_destroy()` - Destroy a key-value pair
-- `cfl_kv_item_create()` - Create a new key-value item
-- `cfl_kv_item_destroy()` - Destroy a key-value item
-
-**Array Operations (cfl_array)**
-- `cfl_array_create()` - Create a new array
-- `cfl_array_destroy()` - Destroy an array
-- `cfl_array_append()` - Append an element to an array
-- `cfl_array_get()` - Get an element from an array
-- `cfl_array_size()` - Get the size of an array
-- `cfl_array_is_empty()` - Check if an array is empty
-
-**Hash Operations (cfl_hash)**
-- `cfl_hash_64bits()` - Compute a 64-bit hash
-- `cfl_hash_64bits_reset()` - Reset a hash state
-- `cfl_hash_64bits_update()` - Update a hash state
-- `cfl_hash_64bits_digest()` - Get the digest of a hash state
-- `cfl_hash_128bits()` - Compute a 128-bit hash
-
-**Time Operations (cfl_time)**
-- `cfl_time_now()` - Get the current time in nanoseconds
-
-**Variant Operations (cfl_variant)**
-- `cfl_variant_create()` - Create a new variant
-- `cfl_variant_destroy()` - Destroy a variant
-- `cfl_variant_set_int64()` - Set a variant to an int64 value
-- `cfl_variant_set_uint64()` - Set a variant to a uint64 value
-- `cfl_variant_set_double()` - Set a variant to a double value
-- `cfl_variant_set_bool()` - Set a variant to a boolean value
-- `cfl_variant_set_string()` - Set a variant to a string value
-- `cfl_variant_get_int64()` - Get an int64 value from a variant
-- `cfl_variant_get_uint64()` - Get a uint64 value from a variant
-- `cfl_variant_get_double()` - Get a double value from a variant
-- `cfl_variant_get_bool()` - Get a boolean value from a variant
-- `cfl_variant_get_string()` - Get a string value from a variant
+**Error Codes**
+- `JSMN_ERROR_NOMEM` - Not enough tokens were provided
+- `JSMN_ERROR_INVAL` - Invalid character inside JSON string
+- `JSMN_ERROR_PART` - The string is not a full JSON packet, more bytes expected
 
 ### Important Usage Notes
 
-1. **Minimal Design**: CFL is intentionally minimal, focusing only on essential data structures and utilities.
-2. **Performance Focus**: All implementations are designed for efficiency in performance-critical applications.
-3. **Memory Management**: CFL handles its own memory management, but users should properly destroy objects when no longer needed.
-4. **String Safety**: The SDS (Simple Dynamic String) implementation is designed to be safe and efficient for string operations.
-5. **List Efficiency**: The linked list implementation is highly optimized for common operations like insertion and deletion.
-6. **Hash Quality**: The hash functions use high-quality algorithms (XXH3) for good distribution properties.
-7. **Thread Safety**: CFL is designed to be thread-safe for most operations, making it suitable for concurrent applications.
+1. **Token-Based Parsing**: jsmn doesn't hold any data but points to token boundaries in the JSON string instead. This allows for zero-copy techniques.
+
+2. **Single-Pass Parsing**: jsmn parses JSON data in a single pass, making it extremely fast and memory efficient.
+
+3. **No Dynamic Memory Allocation**: jsmn doesn't allocate any memory during parsing, making it suitable for resource-constrained environments.
+
+4. **Incremental Parsing**: jsmn supports incremental parsing, allowing you to parse JSON data as it arrives.
+
+5. **Simple Integration**: jsmn is a single-header, header-only library that can be easily integrated into any C project.
+
+6. **Error Handling**: jsmn returns specific error codes for different failure conditions, making error handling straightforward.
+
+7. **Memory Safety**: jsmn is designed to be robust and work fine even with erroneous data.
+
+8. **Portability**: jsmn is highly portable and has been tested on various architectures including x86/amd64, ARM, and AVR.
