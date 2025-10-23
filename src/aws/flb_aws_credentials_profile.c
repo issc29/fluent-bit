@@ -136,17 +136,7 @@ struct flb_aws_credentials *get_credentials_fn_profile(struct flb_aws_provider
         goto error;
     }
 
-    if (implementation->creds->session_token) {
-        creds->session_token = flb_sds_create(implementation->
-                                              creds->session_token);
-        if (!creds->session_token) {
-            flb_errno();
-            goto error;
-        }
 
-    } else {
-        creds->session_token = NULL;
-    }
 
     return creds;
 
