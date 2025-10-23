@@ -103,9 +103,6 @@ int flb_aws_compression_compress(int compression_type, void *in_data, size_t in_
         }
         ++o;
     }
-
-    flb_error("[aws_compress] invalid compression type: %i", compression_type);
-    flb_errno();
     return -1;
 }
 
