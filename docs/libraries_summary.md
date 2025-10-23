@@ -166,7 +166,12 @@ Key features of c-ares include:
    - RFC6724: IPv6 address sorting as used by `ares_getaddrinfo()`.
    - RFC7413: TCP FastOpen (TFO) for 0-RTT TCP Connection Resumption.
    - RFC3986: Uniform Resource Identifier (URI). Used for server configuration.
+   - RFC7091: DNS-Based Authentication of Named Entities (DANE) TLS Protocol: TLSA Record.
+   - RFC7626: DNS Privacy Considerations.
+   - RFC8499: DNS Terminology.
 7. **Security Features**: c-ares includes security-focused implementation with safe parsers and is constantly validated with a range of static and dynamic analyzers, as well as being constantly fuzzed by OSS Fuzz.
+8. **Cross-platform Compatibility**: c-ares runs on Linux, FreeBSD, OpenBSD, MacOS, Solaris, AIX, Windows, Android, iOS and many more operating systems.
+9. **License**: c-ares is MIT licensed, suitable for both free and commercial software.
 
 ## lib/cfl
 
@@ -186,6 +191,8 @@ CFL provides implementations for:
 The library is designed to be minimal and focused, providing only what's needed for efficient data handling in performance-critical applications.
 
 Note: The name doesn't mean anything specific, you can call it `c:\ floppy` if you want.
+
+License: This program is under the terms of the [Apache License v2.0](http://www.apache.org/licenses/LICENSE-2.0).
 
 ### Key Methods/Functions
 

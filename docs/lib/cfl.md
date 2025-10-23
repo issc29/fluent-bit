@@ -17,6 +17,8 @@ The library is designed to be minimal and focused, providing only what's needed 
 
 Note: The name doesn't mean anything specific, you can call it `c:\ floppy` if you want.
 
+License: This program is under the terms of the [Apache License v2.0](http://www.apache.org/licenses/LICENSE-2.0).
+
 ## Key Methods/Functions
 
 ### Core Library

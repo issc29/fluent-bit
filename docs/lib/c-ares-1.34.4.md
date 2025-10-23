@@ -96,3 +96,5 @@ Key features of c-ares include:
    - RFC7413: TCP FastOpen (TFO) for 0-RTT TCP Connection Resumption.
    - RFC3986: Uniform Resource Identifier (URI). Used for server configuration.
 7. **Security Features**: c-ares includes security-focused implementation with safe parsers and is constantly validated with a range of static and dynamic analyzers, as well as being constantly fuzzed by OSS Fuzz.
+8. **Cross-platform Compatibility**: c-ares runs on Linux, FreeBSD, OpenBSD, MacOS, Solaris, AIX, Windows, Android, iOS and many more operating systems.
+9. **License**: c-ares is MIT licensed, suitable for both free and commercial software.
