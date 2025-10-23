@@ -10,22 +10,24 @@ This C header file defines the public interface for Arrow-based compression func
 Main entry point for Arrow/Feather compression.
 - **Parameters**:
   - `json`: Pointer to JSON data to compress
-  - `size`: Size of the JSON data in bytes
-  - `out_buf`: Output parameter for the compressed data buffer
+  - `size`: Size of the JSON data in bytes (excluding null terminator)
+  - `out_buf`: Output parameter for the compressed data buffer (caller must free)
   - `out_size`: Output parameter for the size of compressed data
 - **Returns**: 0 on success, -1 on failure
 - **Description**: Converts JSON data to Arrow Table format and then to Feather format
+- **Thread Safety**: Not thread-safe; caller must ensure proper synchronization
 
 ### `out_s3_compress_parquet` (Conditional)
 Main entry point for Parquet compression.
 - **Parameters**:
   - `json`: Pointer to JSON data to compress
-  - `size`: Size of the JSON data in bytes
-  - `out_buf`: Output parameter for the compressed data buffer
+  - `size`: Size of the JSON data in bytes (excluding null terminator)
+  - `out_buf`: Output parameter for the compressed data buffer (caller must free)
   - `out_size`: Output parameter for the size of compressed data
 - **Returns**: 0 on success, -1 on failure
 - **Description**: Converts JSON data to Arrow Table format and then to Parquet format
 - **Availability**: Only declared when `FLB_HAVE_ARROW_PARQUET` is defined
+- **Thread Safety**: Not thread-safe; caller must ensure proper synchronization
 
 ## Important Variables
 
@@ -38,6 +40,7 @@ This header file:
 - Is included by the S3 output plugin and other components needing Arrow compression
 - Depends on standard C types (void*, size_t)
 - Integrates with the AWS compression system
+- Part of the Arrow compression module
 
 ## Notable Implementation Details
 
@@ -46,6 +49,8 @@ This header file:
 3. **Memory Management**: Caller is responsible for freeing the returned buffer
 4. **Error Reporting**: Simple integer return codes for success/failure
 5. **Documentation**: Inline comments explain parameters and behavior
+6. **Parameter Validation**: Functions validate input parameters
+7. **Resource Ownership**: Clear ownership transfer to caller
 
 ## Usage Examples
 
@@ -60,6 +65,7 @@ size_t compressed_size;
 if (out_s3_compress_arrow(json_data, json_size, &compressed_data, &compressed_size) == 0) {
     // Use compressed_data
     // Remember to free compressed_data when done
+    free(compressed_data);
 }
 
 // For Parquet compression (when available)
@@ -67,6 +73,11 @@ if (out_s3_compress_arrow(json_data, json_size, &compressed_data, &compressed_si
 if (out_s3_compress_parquet(json_data, json_size, &compressed_data, &compressed_size) == 0) {
     // Use compressed_data
     // Remember to free compressed_data when done
+    free(compressed_data);
 }
 #endif
 ```
+
+## Error Handling
+
+Functions return -1 on failure and 0 on success. All error paths ensure no memory leaks occur.

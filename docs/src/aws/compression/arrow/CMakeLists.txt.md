@@ -36,6 +36,7 @@ This file is part of the Arrow compression module and:
 3. **Memory Allocator Support**: Optionally links to jemalloc when enabled
 4. **Modular Design**: Separates Arrow compression into its own library
 5. **Proper Linking**: Correctly sets up include directories and link libraries
+6. **Error Handling**: Includes proper error checking for library creation
 
 ## Usage Examples
 
@@ -47,5 +48,11 @@ target_link_libraries(my_target flb-aws-arrow)
 To enable Arrow compression support:
 ```bash
 cmake -DFLB_ARROW=ON ..
+make
+```
+
+To enable both Arrow and Parquet compression support:
+```bash
+cmake -DFLB_ARROW=ON -DFLB_HAVE_ARROW_PARQUET=ON ..
 make
 ```

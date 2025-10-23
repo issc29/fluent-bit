@@ -13,10 +13,12 @@ This CMakeLists.txt file is the build configuration for AWS compression function
 ### Conditional Compilation
 The file uses conditional compilation to include Arrow compression support:
 - `FLB_ARROW`: Enables Arrow-based compression functionality
+- `FLB_HAVE_ARROW_PARQUET`: Enables Parquet compression support (when Arrow is enabled)
 
 ## Important Variables
 
 - `FLB_ARROW`: Build flag to enable Arrow compression support
+- `FLB_HAVE_ARROW_PARQUET`: Build flag to enable Parquet compression support
 
 ## Dependencies and Relationships
 
@@ -32,12 +34,19 @@ This file is part of the AWS compression module and:
 2. **Conditional Inclusion**: Only includes Arrow compression when explicitly enabled
 3. **Modular Design**: Separates compression functionality into its own module
 4. **Dependency Management**: Properly links to Arrow compression library when enabled
+5. **Parquet Support**: Conditionally supports Parquet compression when Arrow is enabled
 
 ## Usage Examples
 
 To build with Arrow compression support:
 ```bash
 cmake -DFLB_ARROW=ON ..
+make
+```
+
+To build with Parquet compression support:
+```bash
+cmake -DFLB_ARROW=ON -DFLB_HAVE_ARROW_PARQUET=ON ..
 make
 ```
 

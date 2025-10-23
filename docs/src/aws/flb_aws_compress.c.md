@@ -11,6 +11,7 @@ Maps compression keyword strings to internal compression type identifiers.
 - **Parameters**: `compression_keyword` - String representation of compression type
 - **Returns**: Integer compression type identifier or -1 on error
 - **Supported Types**: "gzip", "zstd", "arrow" (conditional), "parquet" (conditional)
+- **Error Handling**: Logs error and returns -1 for unknown compression types
 
 ### `flb_aws_compression_compress`
 Applies the specified compression algorithm to input data.
@@ -18,10 +19,11 @@ Applies the specified compression algorithm to input data.
   - `compression_type`: Internal compression type identifier
   - `in_data`: Input data to compress
   - `in_len`: Length of input data
-  - `out_data`: Output parameter for compressed data buffer
+  - `out_data`: Output parameter for compressed data buffer (caller must free)
   - `out_len`: Output parameter for size of compressed data
 - **Returns**: 0 on success, -1 on error
 - **Description**: Delegates to the appropriate compression function based on type
+- **Thread Safety**: Not thread-safe; caller must ensure proper synchronization
 
 ### `flb_aws_compression_b64_truncate_compress`
 Compresses data and ensures the base64-encoded result fits within a maximum size.
@@ -30,10 +32,12 @@ Compresses data and ensures the base64-encoded result fits within a maximum size
   - `max_out_len`: Maximum allowed output length
   - `in_data`: Input data to compress
   - `in_len`: Length of input data
-  - `out_data`: Output parameter for base64-encoded compressed data
+  - `out_data`: Output parameter for base64-encoded compressed data (caller must free)
   - `out_len`: Output parameter for size of base64-encoded data
 - **Returns**: 0 on success, -1 on error
 - **Description**: Iteratively truncates input data until compressed output fits size limit
+- **Algorithm**: Uses iterative approach with 90% reduction factor
+- **Safety**: Limits maximum attempts to prevent infinite loops
 
 ## Important Variables and Constants
 
@@ -47,11 +51,19 @@ struct compression_option {
 ```
 - Maps compression types to their string representations and function pointers
 - Conditionally includes Arrow and Parquet options
+- Footer entry with compression_type = 0 marks end of array
 
 ### Truncation Constants
 - `truncation_suffix`: "[Truncated...]" suffix added to truncated data
 - `truncation_reduction_percent`: 90% reduction factor for iterative truncation
 - `truncation_compression_max_attempts`: Maximum 10 attempts to avoid infinite loops
+
+### Compression Type Constants
+- `FLB_AWS_COMPRESS_NONE`: 0 (reserved)
+- `FLB_AWS_COMPRESS_GZIP`: 1
+- `FLB_AWS_COMPRESS_ZSTD`: 2
+- `FLB_AWS_COMPRESS_ARROW`: 3 (conditional)
+- `FLB_AWS_COMPRESS_PARQUET`: 4 (conditional)
 
 ## Dependencies and Relationships
 
@@ -64,6 +76,7 @@ This file depends on:
 It is used by:
 - AWS output plugins (S3, CloudWatch Logs, etc.)
 - Other components needing AWS-compatible compression
+- The AWS compression interface library
 
 ## Notable Implementation Details
 
@@ -74,6 +87,9 @@ It is used by:
 5. **Memory Management**: Proper allocation and deallocation of buffers
 6. **Error Handling**: Comprehensive error checking and reporting
 7. **Size Calculation**: Accurate base64 buffer size calculation
+8. **Resource Ownership**: Clear ownership transfer to caller
+9. **Parameter Validation**: Functions validate input parameters
+10. **Performance Optimization**: Efficient iterative truncation algorithm
 
 ## Usage Examples
 
@@ -92,6 +108,7 @@ if (flb_aws_compression_compress(compression_type, input_data, input_size,
                                 &compressed_data, &compressed_size) == 0) {
     // Use compressed_data
     // Remember to free compressed_data when done
+    flb_free(compressed_data);
 }
 
 // Compress with size limit and base64 encoding
@@ -100,5 +117,10 @@ if (flb_aws_compression_b64_truncate_compress(compression_type, max_size,
                                              &compressed_data, &compressed_size) == 0) {
     // Use base64-encoded compressed_data
     // Remember to free compressed_data when done
+    flb_free(compressed_data);
 }
 ```
+
+## Error Handling
+
+All functions return -1 on failure and 0 on success. Error paths ensure proper cleanup of allocated resources to prevent memory leaks.

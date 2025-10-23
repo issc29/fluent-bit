@@ -16,6 +16,7 @@ The file defines the core AWS source files:
 - Profile-based credential loading (`flb_aws_credentials_profile.c`)
 - MSK IAM authentication (`flb_aws_msk_iam.c`)
 - Credential process support (`flb_aws_credentials_process.c`)
+- Error reporting (`flb_aws_error_reporter.c`)
 
 ### Subdirectories
 - `compression`: AWS-specific compression implementations
@@ -47,6 +48,7 @@ This file is part of the AWS integration module and:
 2. **Conditional Features**: Enables/disables MSK IAM and credential process based on build flags
 3. **Dependency Management**: Properly links required libraries (rdkafka for MSK IAM)
 4. **Feature Detection**: Uses message() statements to report enabled features during build
+5. **Include Directories**: Sets up proper include paths for AWS headers
 
 ## Usage Examples
 
